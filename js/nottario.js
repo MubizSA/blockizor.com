@@ -1,6 +1,7 @@
 var app = new Vue({
   el: '#app',
   data: {
+    etherscanLink:"",
     hash:"",
     name:"",
     lastModified:"",
@@ -23,6 +24,7 @@ var app = new Vue({
   },
   methods: {
     display_upload: function() {
+      window.scrollTo(0,0);
       app.upload_visible = true;
     },
     cancel_upload: function() {
@@ -43,19 +45,27 @@ var app = new Vue({
         alert("No Ethereum account found - please log into MetaMask/Mist");
         return;
       }
+      app.error="";
 
       console.log("creating contract, with", web3.eth.accounts[0]);
       var nottarioContract = web3.eth.contract(abi);
-      var nottario =nottarioContract.new( this.hash, this.name, this.type, this.size, this.lastModified, {from:web3.eth.accounts[0], data: bin, gas: 500000, value: 10000000000000000}, function(err,data) {
+      var nottario =nottarioContract.new( this.hash, this.name, this.type, this.size, this.lastModified, {from:web3.eth.accounts[0], data: bin, gas: 600000, value: 10000000000000000}, function(err,data) {
         console.log(err, data);
         if (err)  {
-          app.error = err;
+            setInterval(function(){
+              web3.eth.getTransactionReceipt(app.tx , function(err,d){ 
+                if(!err && d.contractAddress) {
+                  window.location = 'contract.html#' + d.contractAddress;
+                }
+              });
+            }, 2000);
         } else {
           if (data.address) {
             window.location = 'contract.html#' + data.address;
           } else {
             app.tx = data.transactionHash;
             app.animate = true;
+            app.etherscanLink = "https://etherscan.io/tx/" + app.tx;
           }
         }
       });
@@ -78,7 +88,11 @@ function drop_handler(ev) {
   console.log("Drop");
   ev.preventDefault();
   app.dragging=false;
+  console.log('ev is', ev);
   var f = ev.dataTransfer.files[0];
+  if (!f) {
+    return alert('Cannot read file meta data');
+  }
   console.log ("the file is" , f);
   app.lastModified = f.lastModified;
   app.name = f.name.substr(0,32);
@@ -95,6 +109,5 @@ function drop_handler(ev) {
   };
   reader.readAsText(f);
 }
-
 
 

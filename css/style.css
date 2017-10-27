@@ -8,6 +8,18 @@
   background-color:#eee
 }
 
+.contacttxt {
+  font-size: 16px;
+}
+
+.abi {
+  text-align:left;
+}
+
+#blockchain {
+  background-color:#eee
+}
+
 .buttonspace {
   margin-top: 20px
 }
@@ -23,4 +35,24 @@
 
 .dragging {
   background-color: red;
+}
+
+.icon-padding {
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+.verified {
+       margin-top: 20px;
+       color: green;
+       font-size: 20px;
+}
+.unverified {
+       margin-top: 20px;
+       color: red;
+       font-size: 20px;
 }

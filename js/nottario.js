@@ -42,7 +42,7 @@ var app = new Vue({
       // `this` inside methods points to the Vue instance
 
       if (web3.eth.accounts.length === 0) {
-        alert("No Ethereum account found - please log into MetaMask/Mist");
+        alert("Aucun compte Ethereum trouvé - Merci de vous connecté à votre plug-in MetaMask puis recharger la page");
         return;
       }
       app.error="";
@@ -65,7 +65,7 @@ var app = new Vue({
           } else {
             app.tx = data.transactionHash;
             app.animate = true;
-            app.etherscanLink = "https://etherscan.io/tx/" + app.tx;
+            app.etherscanLink = "https://ropsten.etherscan.io/tx/" + app.tx;
           }
         }
       });
@@ -91,7 +91,7 @@ function drop_handler(ev) {
   console.log('ev is', ev);
   var f = ev.dataTransfer.files[0];
   if (!f) {
-    return alert('Cannot read file meta data');
+    return alert('Accès refusé au meta data du fichier');
   }
   console.log ("the file is" , f);
   app.lastModified = f.lastModified;
@@ -109,5 +109,3 @@ function drop_handler(ev) {
   };
   reader.readAsText(f);
 }
-
-
